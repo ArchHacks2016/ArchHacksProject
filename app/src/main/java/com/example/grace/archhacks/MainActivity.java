@@ -16,6 +16,7 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
 
     private StorageReference mStorageRef;
+    private final String API_KEY = "AIzaSyDpKGtPFEeXRwzD3WVZGNaiDc9K4FuVwi0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,5 +43,7 @@ public class MainActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+
+
     }
 }
