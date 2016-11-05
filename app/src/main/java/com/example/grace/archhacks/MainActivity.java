@@ -286,6 +286,9 @@ public class MainActivity extends AppCompatActivity {
             message += "nothing";
         }
 
-        return response.toString();
+        return "Joy Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood() + "\n" +
+                "Surprise Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood()+ "\n" +
+                "Anger Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getAngerLikelihood() + "\n" +
+                "Sorrow Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getSorrowLikelihood();
     }
 }
