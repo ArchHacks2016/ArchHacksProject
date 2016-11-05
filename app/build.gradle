@@ -38,7 +38,7 @@
 //    compile 'com.google.apis:google-api-services-vision:v1-rev27-1.22.0'
 //}
 //
-//apply plugin: 'com.google.gms.google-services'
+
 
 apply plugin: 'com.android.application'
 
@@ -47,8 +47,8 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.google.sample.cloudvision"
-        minSdkVersion 9
+        applicationId "com.example.grace.archhacks"
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
