@@ -1,4 +1,4 @@
-# Project at ArchHacks - *Smilens*
+# Project at ArchHacks - *Smilens* <img src = 'http://i.imgur.com/TVXYUzD.png'>
 Description: User can take a picture or choose a picture from gallery and upload to this app. Then they can get an interpretation of  emotions in that picture. User can also browse all photos they submit and view a trend of emotions over the week/month. Quotes and suggestions will be given to improve their mental health status.
 
 Time spent: **48** hours spent in total
