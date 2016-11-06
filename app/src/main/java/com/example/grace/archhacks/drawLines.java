@@ -12,7 +12,6 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -40,8 +39,10 @@ public class drawLines extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.linechart);
-
+        Trend t  =new Trend();
+        t.initializeTrends();
         final LineChart lineChart = (LineChart) findViewById(R.id.chart);
+        lineChart.setDescription("Your emotions for the past 7 days");
         Legend legend = lineChart.getLegend();
         legend.setEnabled(false);
 
@@ -82,11 +83,15 @@ public class drawLines extends AppCompatActivity {
                     labels.add("Day 7");
 
                     LineData data = new LineData(labels, dataset);
-                    dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
+//                    dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
                     dataset.setDrawCubic(true);
                     dataset.setDrawFilled(true);
-
                     lineChart.setData(data);
+
+                    dataset.setDrawValues(false);
+                    dataset.setColors(new int[] {R.color.colorPrimary,R.color.colorPrimaryDark});
+                    dataset.setFillColor(R.color.colorAccent);
+
                     lineChart.animateY(5000);
                     float[] input = new float[7];
                     input[0] = day1;

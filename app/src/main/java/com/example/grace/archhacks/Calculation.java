@@ -20,11 +20,11 @@ public class Calculation  {
 
         int neg = Math.max(anger, sad);
         if(neg<joy){
-            return ""+ 4 + (joy/threshold)+"f";
+            return ""+ 4 + (joy/threshold);
         }else if(neg==joy){
-            return ""+ 3f;
+            return ""+ 3;
         }else{ //neg>joy
-            return ""+ (2 - neg/threshold)+"f";
+            return ""+ (2 - neg/threshold);
         }
     }
 
