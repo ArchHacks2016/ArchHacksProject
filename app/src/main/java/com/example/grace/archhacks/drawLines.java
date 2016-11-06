@@ -93,9 +93,14 @@ public class drawLines extends AppCompatActivity {
         dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
         dataset.setDrawCubic(true);
         dataset.setDrawFilled(true);
-
         lineChart.setData(data);
+        // Disable labels and change colors.
+        dataset.setDrawValues(false);
+        dataset.setColors(new int[]{R.color.colorPrimary, R.color.colorPrimaryDark});
+        dataset.setFillColor(R.color.colorAccent);
+
         lineChart.animateY(5000);
+
         float[] input = new float[7];
         input[0] = day1;
         input[1] = day2;
