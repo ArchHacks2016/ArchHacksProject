@@ -30,8 +30,11 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,11 +56,23 @@ public class MainActivity extends AppCompatActivity {
     private TextView mImageDetails;
     private ImageView mMainImage;
     Bitmap yourBitmap;
+    ParseUser user;
+    Trend trend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        user = new ParseUser();
+
+        ParseQuery<Trend> query = ParseQuery.getQuery(Trend.class);
+        query.getFirstInBackground(new GetCallback<Trend>() {
+            @Override
+            public void done(Trend object, ParseException e) {
+                trend = object;
+            }
+        });
 
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -274,11 +289,18 @@ public class MainActivity extends AppCompatActivity {
     private String convertResponseToString(BatchAnnotateImagesResponse response) throws ParseException {
         Picture picture = new Picture();
 
-        picture.setHappinessLikelihood(likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood()));
-        picture.setSurprisedLikelihood(likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood()));
-        picture.setAngerLikelihood(likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getAngerLikelihood()));
-        picture.setSadnessLikelihood(likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSorrowLikelihood()));
+        int happinessLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood());
+        int surpriseLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood());
+        int angerLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getAngerLikelihood());
+        int sadnessLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSorrowLikelihood());
 
+
+        picture.setHappinessLikelihood(happinessLikelihood);
+        picture.setSurprisedLikelihood(surpriseLikelihood);
+        picture.setAngerLikelihood(angerLikelihood);
+        picture.setSadnessLikelihood(sadnessLikelihood);
+
+        picture.setEmotionLevel(Calculation.emotionLevel(happinessLikelihood,angerLikelihood,sadnessLikelihood,surpriseLikelihood));
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         yourBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -287,6 +309,12 @@ public class MainActivity extends AppCompatActivity {
         picture.setPhotoFile(file);
 
         picture.save();
+
+        trend.addToTrend(Calculation.emotionLevel(happinessLikelihood,angerLikelihood,sadnessLikelihood,surpriseLikelihood));
+        trend.save();
+
+//        Trend.addToHashMap(Calculation.emotionLevel(happinessLikelihood,angerLikelihood,sadnessLikelihood,surpriseLikelihood));
+
         return "Joy Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood() + "\n" +
                 "Surprise Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood()+ "\n" +
                 "Anger Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getAngerLikelihood() + "\n" +
@@ -294,21 +322,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int likelihoodValue(String likelihood) {
-        Log.d("likelihood",likelihood);
         if(likelihood.equals("VERY_UNLIKELY")) {
-            return 1;
+            return 0;
         }
         else if(likelihood.equals("UNLIKELY")) {
-            return 2;
+            return 25;
         }
         else if(likelihood.equals("POSSIBLE")) {
-            return 3;
+            return 50;
         }
         else if(likelihood.equals("LIKELY")) {
-            return 4;
+            return 75;
         }
         else if (likelihood.equals("VERY_LIKELY")){
-            return 5;
+            return 100;
         }
         return -1;
     }

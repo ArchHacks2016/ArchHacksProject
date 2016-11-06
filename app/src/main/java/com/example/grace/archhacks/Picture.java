@@ -34,6 +34,8 @@ public class Picture extends ParseObject{
 
     public int getSadnessLikelihood() { return getInt("sadness");}
 
+    public int getEmotionLevel() { return getInt("emotionLevel"); }
+
     public void setId(String id) {
         setObjectId(id);
     }
@@ -52,5 +54,6 @@ public class Picture extends ParseObject{
 
     public void setSadnessLikelihood(int likelihood) { put("sadness",likelihood);}
 
+    public void setEmotionLevel(int emotionLevel) {put("emotionLevel",emotionLevel); }
 
 }

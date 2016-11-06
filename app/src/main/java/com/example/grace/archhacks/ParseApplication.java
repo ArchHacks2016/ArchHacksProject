@@ -33,8 +33,10 @@ public class ParseApplication extends Application {
                 .server("http://guarded-meadow-68333.herokuapp.com/parse").build());
 
         ParseObject.registerSubclass(Picture.class);
+        ParseObject.registerSubclass(Trend.class);
 
-         // Test creation of object
+
+        // Test creation of object
         ParseObject testObject = new ParseObject("TestObject");
         testObject.put("foo", "bar");
         testObject.saveInBackground();

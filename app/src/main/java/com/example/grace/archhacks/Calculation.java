@@ -4,7 +4,7 @@ package com.example.grace.archhacks;
  * Created by XIN on 11/5/16.
  */
 
-public class Calculation {
+public class Calculation  {
 
     protected static int threshold=75;
 
@@ -15,7 +15,7 @@ public class Calculation {
         4 - bien
         3 - neutral
         2 - mal
-        1 - tres mal
+        1 - t-res mal
          */
 
         int neg = Math.max(anger, sad);
