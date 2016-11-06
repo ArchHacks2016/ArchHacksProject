@@ -6,7 +6,7 @@ package com.example.grace.archhacks;
 
 public class Calculation  {
 
-    protected static int threshold=75;
+    protected static int threshold=80;
 
     public static String emotionLevel(int joy, int anger, int sad, int surprise){
         /*
@@ -39,37 +39,37 @@ public class Calculation  {
         int[] differences=new int[len];
 
         for(int i=0; i<len-1; i++){
-            differences[i]=levels[i+1]=levels[i];
+            differences[i]=levels[i+1]-levels[i];
         }
 
         int sum1=0;
         int sum2=0;
-        for(int i=0; i<len/2-1; i++){
+        for(int i=0; i<4; i++){
             sum1+=levels[i];
         }
-        for(int i=len/2; i<len-1; i++){
-            sum2+=levels[i+1];
+        for(int i=4; i<7; i++){
+            sum2+=levels[i];
         }
 
-        sum1=sum1*2/len;
-        sum2=sum2*2/len;
+        sum1=(sum1)/4;
+        sum2=(sum2)/3;
 
-        if(sum1==sum2){
+        if(Math.abs(sum1-sum2)<=1){
             if(sum1>3){
                 return "You feel happy through out the time. Keep smiling:) ";
             }else if(sum1==3){
                 return "You feel neutral these days. ";
             }else{
-                return "You feel not happy this week. What's up? ";
+                return "You don't not happy this week. What's up? ";
             }
         }else if(sum1>sum2){
-            if(sum1>3){
+            if(sum2>3){
                 return "You feel happy throughout the time. Keep smiling:) ";
             }else{
                 return "It is great that you feel better now. ";
             }
         }else{
-            if(sum2<3){
+            if(sum1<3){
                 return "Don't forget to smile! ";
             }else{
                 return "You feel worse throughout the time. What's up? ";
