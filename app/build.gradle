@@ -76,8 +76,10 @@ dependencies {
     compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
     compile 'com.google.firebase:firebase-storage:9.6.0'
     compile 'com.google.firebase:firebase-auth:9.6.0'
+    compile 'com.diogobernardino:williamchart:2.3.0'
     compile 'com.google.firebase:firebase-database:9.6.0'
     testCompile 'junit:junit:4.12'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
