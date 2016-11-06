@@ -20,7 +20,7 @@ public class drawLines extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.linechart);
 
         LineChart lineChart = (LineChart) findViewById(R.id.chart);
         float day1 = 5f;
@@ -30,14 +30,6 @@ public class drawLines extends AppCompatActivity {
         float day5 = 4f;
         float day6 = 5f;
         float day7 = 5f;
-        float[] input = new float[7];
-        input[1] = day1;
-        input[2] = day2;
-        input[3] = day4;
-        input[4] = day4;
-        input[5] = day5;
-        input[6] = day6;
-        input[7] = day7;
 
         ArrayList<Entry> entries = new ArrayList<>();
         entries.add(new Entry(day1, 0));
@@ -48,16 +40,16 @@ public class drawLines extends AppCompatActivity {
         entries.add(new Entry(day6, 5));
         entries.add(new Entry(day7, 6));
 
-        LineDataSet dataset = new LineDataSet(entries, "# of Calls");
+        LineDataSet dataset = new LineDataSet(entries, "score");
 
         ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Sun");
-        labels.add("Mon");
-        labels.add("Tue");
-        labels.add("Wed");
-        labels.add("Thur");
-        labels.add("Fri");
-        labels.add("Sat");
+        labels.add("Day 1");
+        labels.add("Day 2");
+        labels.add("Day 3");
+        labels.add("Day 4");
+        labels.add("Day 5");
+        labels.add("Day 6");
+        labels.add("Day 7");
 
         LineData data = new LineData(labels, dataset);
         dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
@@ -66,7 +58,15 @@ public class drawLines extends AppCompatActivity {
 
         lineChart.setData(data);
         lineChart.animateY(5000);
-        
+        float[] input = new float[7];
+        input[0] = day1;
+        input[1] = day2;
+        input[2] = day3;
+        input[3] = day4;
+        input[4] = day5;
+        input[5] = day6;
+        input[6] = day7;
+        // Get suggestion.
         String suggestion = suggest(input);
         TextView textView = (TextView) findViewById(R.id.ansView);
         textView.setText(suggestion);
