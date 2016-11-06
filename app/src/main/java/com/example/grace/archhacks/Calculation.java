@@ -8,7 +8,7 @@ public class Calculation  {
 
     protected static int threshold=75;
 
-    public static int emotionLevel(int joy, int anger, int sad, int surprise){
+    public static String emotionLevel(int joy, int anger, int sad, int surprise){
         /*
         Scale:
         5 - tres bien
@@ -20,11 +20,11 @@ public class Calculation  {
 
         int neg = Math.max(anger, sad);
         if(neg<joy){
-            return 4 + joy/threshold;
+            return ""+ 4 + (joy/threshold)+"f";
         }else if(neg==joy){
-            return 3;
+            return ""+ 3f;
         }else{ //neg>joy
-            return 2 - neg/threshold;
+            return ""+ (2 - neg/threshold)+"f";
         }
     }
 
