@@ -28,20 +28,19 @@ import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
-import com.google.firebase.storage.StorageReference;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private StorageReference mStorageRef;
+
     private final String API_KEY = "AIzaSyDpKGtPFEeXRwzD3WVZGNaiDc9K4FuVwi0";
 
     public static final String FILE_NAME = "temp.jpg";
@@ -53,32 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mImageDetails;
     private ImageView mMainImage;
+    Bitmap yourBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        mStorageRef = FirebaseStorage.getInstance().getReference();
-//
-//        Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-//        StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
-//
-//        riversRef.putFile(file)
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        // Get a URL to the uploaded content
-//                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        // Handle unsuccessful uploads
-//                        // ...
-//                    }
-//                });
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -143,8 +123,22 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             uploadImage(data.getData());
+            Uri imageUri = data.getData();
+            try {
+                yourBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
             uploadImage(Uri.fromFile(getCameraFile()));
+
+            Uri imageUri = data.getData();
+            try {
+                yourBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -236,7 +230,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "created Cloud Vision request object, sending request");
 
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
-                    return convertResponseToString(response);
+                    try {
+                        return convertResponseToString(response);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
                 } catch (GoogleJsonResponseException e) {
                     Log.d(TAG, "failed to make API request because " + e.getContent());
@@ -273,22 +271,45 @@ public class MainActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
 
-    private String convertResponseToString(BatchAnnotateImagesResponse response) {
-        String message = "I found these things:\n\n";
+    private String convertResponseToString(BatchAnnotateImagesResponse response) throws ParseException {
+        Picture picture = new Picture();
 
-        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
-        if (labels != null) {
-            for (EntityAnnotation label : labels) {
-                message += String.format("%.3f: %s", label.getScore(), label.getDescription());
-                message += "\n";
-            }
-        } else {
-            message += "nothing";
-        }
+        picture.setHappinessLikelihood(likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood()));
+        picture.setSurprisedLikelihood(likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood()));
+        picture.setAngerLikelihood(likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getAngerLikelihood()));
+        picture.setSadnessLikelihood(likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSorrowLikelihood()));
 
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        yourBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] image = stream.toByteArray();
+        ParseFile file = new ParseFile("picture.png", image);
+        picture.setPhotoFile(file);
+
+        picture.save();
         return "Joy Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood() + "\n" +
                 "Surprise Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood()+ "\n" +
                 "Anger Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getAngerLikelihood() + "\n" +
                 "Sorrow Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getSorrowLikelihood();
+    }
+
+    private int likelihoodValue(String likelihood) {
+        Log.d("likelihood",likelihood);
+        if(likelihood.equals("VERY_UNLIKELY")) {
+            return 1;
+        }
+        else if(likelihood.equals("UNLIKELY")) {
+            return 2;
+        }
+        else if(likelihood.equals("POSSIBLE")) {
+            return 3;
+        }
+        else if(likelihood.equals("LIKELY")) {
+            return 4;
+        }
+        else if (likelihood.equals("VERY_LIKELY")){
+            return 5;
+        }
+        return -1;
     }
 }
