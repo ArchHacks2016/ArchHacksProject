@@ -5,10 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 
@@ -17,19 +21,53 @@ import java.util.ArrayList;
  */
 
 public class drawLines extends AppCompatActivity {
+    Trend trend;
+    float day1;
+    float day2;
+    float day3;
+    float day4;
+    float day5;
+    float day6;
+    float day7;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.linechart);
 
         LineChart lineChart = (LineChart) findViewById(R.id.chart);
+        Legend legend = lineChart.getLegend();
+        legend.setEnabled(false);
+
+        ParseQuery<Trend> query = ParseQuery.getQuery(Trend.class);
+        query.getFirstInBackground(new GetCallback<Trend>() {
+            @Override
+            public void done(Trend object, ParseException e) {
+                trend = object;
+
+//                try {
+//                    day1 = (float)trend.getJSONArray("trends").getDouble(0);
+//                    day2 = (float)trend.getJSONArray("trends").getDouble(0);
+//                    day3 = Float.valueOf(trend.getJSONArray("trends").get(2).toString());
+//                    day4 = Float.valueOf(trend.getJSONArray("trends").get(3).toString());
+//                    day5 = Float.valueOf(trend.getJSONArray("trends").get(4).toString());
+//                    day6 = Float.valueOf(trend.getJSONArray("trends").get(5).toString());
+//                    day7 = Float.valueOf(trend.getJSONArray("trends").get(6).toString());
+//                } catch (JSONException e1) {
+//                    e1.printStackTrace();
+//                }
+
+            }
+        });
+
+
         float day1 = 5f;
-        float day2 = 4f;
-        float day3 = 5f;
-        float day4 = 2f;
-        float day5 = 4f;
-        float day6 = 5f;
-        float day7 = 5f;
+        float day2 = 3f;
+        float day3 = 4f;
+        float day4 = 4f;
+        float day5 = 3f;
+        float day6 = 1f;
+        float day7 = 1f;
 
         ArrayList<Entry> entries = new ArrayList<>();
         entries.add(new Entry(day1, 0));
@@ -66,6 +104,8 @@ public class drawLines extends AppCompatActivity {
         input[4] = day5;
         input[5] = day6;
         input[6] = day7;
+
+
         // Get suggestion.
         String suggestion = suggest(input);
         TextView textView = (TextView) findViewById(R.id.ansView);

@@ -54,6 +54,6 @@ public class Picture extends ParseObject{
 
     public void setSadnessLikelihood(int likelihood) { put("sadness",likelihood);}
 
-    public void setEmotionLevel(int emotionLevel) {put("emotionLevel",emotionLevel); }
+    public void setEmotionLevel(float emotionLevel) {put("emotionLevel",emotionLevel); }
 
 }

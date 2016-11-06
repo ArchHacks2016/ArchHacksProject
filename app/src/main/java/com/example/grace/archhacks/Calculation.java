@@ -70,9 +70,9 @@ public class Calculation  {
             }
         }else{
             if(sum2<3){
-                return "You feel worse throughout the time. What's up? ";
-            }else{
                 return "Don't forget to smile! ";
+            }else{
+                return "You feel worse throughout the time. What's up? ";
             }
         }
 

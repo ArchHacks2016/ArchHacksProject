@@ -16,7 +16,7 @@ public class Trend extends ParseObject {
 
     public void initializeTrends() { put("trends", new JSONArray()); }
 
-    public void addToTrend(int emotionalLevel) {
+    public void addToTrend(float emotionalLevel) {
         JSONArray trends = getJSONArray("trends");
 
         this.add("trends",emotionalLevel);
