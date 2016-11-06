@@ -61,6 +61,11 @@ android {
     }
 }
 
+// For line charts.
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -78,6 +83,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:9.6.0'
     compile 'com.diogobernardino:williamchart:2.3.0'
     compile 'com.google.firebase:firebase-database:9.6.0'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     testCompile 'junit:junit:4.12'
 
 }
