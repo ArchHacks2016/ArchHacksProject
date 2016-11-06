@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -291,31 +292,33 @@ public class MainActivity extends AppCompatActivity {
     private String convertResponseToString(BatchAnnotateImagesResponse response) throws ParseException {
         Picture picture = new Picture();
 
-//        int happinessLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood());
-//        int surpriseLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood());
-//        int angerLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getAngerLikelihood());
-//        int sadnessLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSorrowLikelihood());
-//
-//
-//        picture.setHappinessLikelihood(happinessLikelihood);
-//        picture.setSurprisedLikelihood(surpriseLikelihood);
-//        picture.setAngerLikelihood(angerLikelihood);
-//        picture.setSadnessLikelihood(sadnessLikelihood);
+        int happinessLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood());
+        int surpriseLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood());
+        int angerLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getAngerLikelihood());
+        int sadnessLikelihood = likelihoodValue(response.getResponses().get(0).getFaceAnnotations().get(0).getSorrowLikelihood());
 
-//        picture.setEmotionLevel(Calculation.emotionLevel(happinessLikelihood,angerLikelihood,sadnessLikelihood,surpriseLikelihood));
+
+        picture.setHappinessLikelihood(happinessLikelihood);
+        picture.setSurprisedLikelihood(surpriseLikelihood);
+        picture.setAngerLikelihood(angerLikelihood);
+        picture.setSadnessLikelihood(sadnessLikelihood);
+
+        Random rand = new Random();
+        picture.setEmotionLevel(rand.nextInt(6));
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         yourBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] image = stream.toByteArray();
         ParseFile file = new ParseFile("picture.png", image);
-//        picture.setPhotoFile(file);
+        picture.setPhotoFile(file);
 
         picture.save();
 
-//        trend.addToTrend(Calculation.emotionLevel(happinessLikelihood,angerLikelihood,sadnessLikelihood,surpriseLikelihood));
+        trend.addToTrend(Calculation.emotionLevel(happinessLikelihood,angerLikelihood,sadnessLikelihood,surpriseLikelihood));
         trend.save();
 
 //        Trend.addToHashMap(Calculation.emotionLevel(happinessLikelihood,angerLikelihood,sadnessLikelihood,surpriseLikelihood));
+
 
         return "Joy Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getJoyLikelihood() + "\n" +
                 "Surprise Likelihood: " + response.getResponses().get(0).getFaceAnnotations().get(0).getSurpriseLikelihood()+ "\n" +

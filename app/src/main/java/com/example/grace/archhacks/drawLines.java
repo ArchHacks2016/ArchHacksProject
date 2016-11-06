@@ -39,8 +39,7 @@ public class drawLines extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.linechart);
-        Trend t  =new Trend();
-        t.initializeTrends();
+
         final LineChart lineChart = (LineChart) findViewById(R.id.chart);
         lineChart.setDescription("Your emotions for the past 7 days");
         Legend legend = lineChart.getLegend();
@@ -52,15 +51,17 @@ public class drawLines extends AppCompatActivity {
             public void done(Trend object, ParseException e) {
                 trend = object;
 
+                int size = trend.getJSONArray("trends").length();
+                Log.d("SIZE",String.valueOf(size));
+
                 try {
-                    day1 = Float.valueOf(trend.getJSONArray("trends").getString(0));
-                    Log.d("FLOAT",String.valueOf(day1));
-                    day2 = Float.valueOf(trend.getJSONArray("trends").getString(1));
-                    day3 = Float.valueOf(trend.getJSONArray("trends").getString(2));
-                    day4 = Float.valueOf(trend.getJSONArray("trends").getString(3));
-                    day5 = Float.valueOf(trend.getJSONArray("trends").getString(4));
-                    day6 = Float.valueOf(trend.getJSONArray("trends").getString(5));
-                    day7 = Float.valueOf(trend.getJSONArray("trends").getString(6));
+                    day1 = Float.valueOf(trend.getJSONArray("trends").getString(size-7));
+                    day2 = Float.valueOf(trend.getJSONArray("trends").getString(size-6));
+                    day3 = Float.valueOf(trend.getJSONArray("trends").getString(size-5));
+                    day4 = Float.valueOf(trend.getJSONArray("trends").getString(size-4));
+                    day5 = Float.valueOf(trend.getJSONArray("trends").getString(size-3));
+                    day6 = Float.valueOf(trend.getJSONArray("trends").getString(size-2));
+                    day7 = Float.valueOf(trend.getJSONArray("trends").getString(size-1));
 
                     ArrayList<Entry> entries = new ArrayList<>();
                     entries.add(new Entry(day1, 0));
